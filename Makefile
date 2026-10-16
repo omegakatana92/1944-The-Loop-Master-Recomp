@@ -15,3 +15,29 @@ ROM ?= rom
 export PYTHONDONTWRITEBYTECODE := 1
 
 include $(CR)/build.mk
+
+# On Windows the game and the launcher need the MinGW runtime beside them — and SDL3 and zlib — before
+# Windows will start them without an MSYS2 shell (a double-click): launching them from that shell works
+# because it has /mingw64/bin on PATH, but a double-click does not. The toolkit's `make` leaves the two
+# programs in build/$(GAME)/ and nothing more, so this adds them: `all: port` gains `deps` after it.
+#
+# Never mix in a DLL from another project's build folder: an older libstdc++-6.dll gives
+# "The procedure entry point ... could not be located in the dynamic link library" when the program starts.
+DLLS ?= SDL3 zlib1 libstdc++-6 libgcc_s_seh-1 libwinpthread-1
+
+all: deps
+
+deps: port
+	@mkdir -p build/$(GAME)
+	@n=0; for d in $(DLLS); do \
+		src="$$(dirname "$$(command -v g++)")/$$d.dll"; \
+		if [ -f "$$src" ]; then cp -f "$$src" "build/$(GAME)/$$d.dll" && n=$$((n + 1)); fi; \
+	done; \
+	if [ $$n -gt 0 ]; then \
+		echo "deps: $$n DLLs beside build/$(GAME)/ — the programs can be double-clicked"; \
+	else \
+		echo "deps: nothing to copy here (not a MinGW build)"; \
+	fi
+
+.PHONY: all deps
+

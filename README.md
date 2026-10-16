@@ -110,14 +110,20 @@ Feature choices come from `work/1944/settings.ini`; the eeprom and the save stat
 beside it. `--help` lists every option (`--headless`, `--frames`, `--movie`, `--poke`, `--trace`,
 `--dump-ram`, `--list-features`, `--cpu`, `--sound`, …).
 
-**On Windows the two programs need `SDL3.dll`.** It comes from MSYS2's `mingw-w64-x86_64-SDL3` and lives in
-`/mingw64/bin`, so launch from an **MSYS2 MinGW64** shell (which has it on `PATH`), or copy `SDL3.dll`
-beside the two `.exe` files.
+**On Windows the two programs need the MinGW runtime beside them** — `SDL3.dll`, `zlib1.dll`,
+`libstdc++-6.dll`, `libgcc_s_seh-1.dll`, `libwinpthread-1.dll`. They come from MSYS2 and live in
+`/mingw64/bin`. `make` copies them into `build/1944/` (the `deps` target, which `all` runs after `port`;
+`make deps` on its own does it too), so the folder can be double-clicked or run from any shell. Starting
+the programs from an **MSYS2 MinGW64** shell works as well, because that shell has `/mingw64/bin` on
+`PATH`.
 
 ## Troubleshooting
 
-- **"SDL3.dll was not found"** — you are not in an MSYS2 MinGW64 shell. Use one, or put MSYS2's
-  `mingw64\bin` on `PATH`, or copy `SDL3.dll` beside `1944.exe`.
+- **"SDL3.dll was not found"**, or **"The procedure entry point … could not be located in the dynamic link
+  library"** — the runtime DLLs are missing from beside the programs, or an older one from another
+  toolchain is being picked up. Run `make deps`, which copies the ones this build needs out of
+  `/mingw64/bin`; or launch from an MSYS2 MinGW64 shell. Do not copy DLLs in from another project's build
+  folder.
 - **`cmake: command not found`** — install `mingw-w64-x86_64-cmake` (Prerequisites); it lands in
   `/mingw64/bin`, which the MinGW64 shell has on `PATH`.
 - **The launcher refuses the ROM set** — it checks every file by CRC-32. This port wants MAME's `1944`
