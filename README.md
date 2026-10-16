@@ -30,8 +30,12 @@ With every feature off the port runs exactly as the board does. From the toolkit
 
 `--list-features` prints the whole list. The game's own features (free play, cheats, a practice mode)
 are still to come; each will read the game's memory and be recorded, with how it was found, in
-[games/1944/PROGRESS.md](games/1944/PROGRESS.md). Ready-made builds for Windows, Linux and the Steam
-Deck go on the [Releases](../../releases) page once the port is finished.
+[games/1944/PROGRESS.md](games/1944/PROGRESS.md).
+
+Ready-made builds are on the [Releases](../../releases) page: a Windows zip, and for the Steam Deck
+and other Linux a self-contained AppImage (or a tarball where there is no FUSE). They carry no game
+data — bring your own ROM set. [tools/release/README.md](tools/release/README.md) says how each one is
+made, and why the Linux ones are built on an old glibc.
 
 ## Layout
 
@@ -42,6 +46,7 @@ Deck go on the [Releases](../../releases) page once the port is finished.
 | `games/1944/src/` | The game's own C++: the optional features on top of the board. Empty for now. |
 | `games/1944/PROGRESS.md` | The game's memory as it is found, and how each address was found. |
 | `ROADMAP.md` | The features still to build and what each needs. |
+| `tools/release/` | How the release archives are made: `windows.sh`, `linux.sh`, and the icon's drawing script. |
 | `rom/` | Your ROM set: a folder of its files or the set's zip. Not committed. |
 | `build/`, `work/` | Build output and generated code. Not committed. |
 
